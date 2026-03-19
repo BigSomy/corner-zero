@@ -1,0 +1,577 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no"/>
+<meta name="theme-color" content="#000000"/>
+<meta name="mobile-web-app-capable" content="yes"/>
+<meta name="apple-mobile-web-app-capable" content="yes"/>
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent"/>
+<meta name="apple-mobile-web-app-title" content="CORNER ZERO"/>
+<title>CORNER ZERO</title>
+<link rel="preconnect" href="https://fonts.googleapis.com"/>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700;900&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet"/>
+<link rel="manifest" href="#" id="manifest-placeholder"/>
+<style>
+  *{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent;}
+  html,body{height:100%;background:#000;color:#fff;font-family:'Space Mono',monospace;overflow-x:hidden;}
+  h1,h2,h3,.serif{font-family:'Playfair Display',serif;}
+  button{font-family:'Space Mono',monospace;cursor:pointer;}
+  #app{max-width:480px;margin:0 auto;min-height:100vh;position:relative;}
+  .home-hero{background:linear-gradient(160deg,#1c1c1e 60%,#2c1810 100%);padding:48px 24px 32px;border-bottom:1px solid #2c2c2e;position:relative;overflow:hidden;}
+  .home-hero::before{content:'';position:absolute;top:-40px;right:-40px;width:200px;height:200px;background:radial-gradient(circle,#FF3B3022 0%,transparent 70%);border-radius:50%;}
+  .hero-eyebrow{font-size:11px;color:#FF3B30;letter-spacing:4px;text-transform:uppercase;margin-bottom:10px;}
+  .hero-title{font-size:38px;font-weight:900;letter-spacing:-1px;line-height:1.05;}
+  .hero-title span{color:#FF3B30;}
+  .hero-sub{margin-top:12px;font-size:12px;color:#8e8e93;line-height:1.6;}
+  .week-bar{margin-top:24px;display:inline-flex;align-items:center;gap:16px;background:#2c2c2e;border-radius:14px;padding:12px 18px;}
+  .week-label{font-size:11px;color:#8e8e93;letter-spacing:2px;}
+  .week-num{font-size:22px;font-weight:700;min-width:28px;text-align:center;font-family:'Playfair Display',serif;}
+  .week-btn{width:30px;height:30px;border-radius:50%;border:none;color:#fff;font-size:18px;display:flex;align-items:center;justify-content:center;line-height:1;}
+  .week-btn.minus{background:#3a3a3c;border:1px solid #48484a;}
+  .week-btn.plus{background:#FF3B30;}
+  .overload-badge{font-size:11px;color:#FF9F0A;letter-spacing:1px;margin-left:4px;}
+  .day-cards{padding:24px 16px 0;}
+  .day-card{background:#1c1c1e;border-radius:18px;padding:20px;margin-bottom:14px;border:1px solid #2c2c2e;cursor:pointer;position:relative;overflow:hidden;transition:transform .12s,box-shadow .12s;}
+  .day-card:active{transform:scale(0.97);}
+  .day-card-bar{position:absolute;top:0;left:0;width:4px;height:100%;border-radius:4px 0 0 4px;}
+  .day-card-inner{padding-left:14px;}
+  .day-eyebrow{font-size:11px;letter-spacing:3px;margin-bottom:4px;}
+  .day-title{font-size:20px;font-weight:900;letter-spacing:-0.5px;font-family:'Playfair Display',serif;}
+  .day-tags{margin-top:12px;display:flex;gap:8px;flex-wrap:wrap;}
+  .day-tag{font-size:10px;background:#2c2c2e;color:#8e8e93;padding:4px 10px;border-radius:20px;}
+  .day-arrow{margin-top:14px;display:flex;align-items:center;gap:8px;}
+  .day-arrow-line{flex:1;height:1px;background:#2c2c2e;}
+  .day-arrow-text{font-size:11px;letter-spacing:1px;}
+  .day-icon{font-size:32px;opacity:.25;font-weight:900;font-family:'Playfair Display',serif;}
+  .rules-box{margin:8px 16px 80px;background:#111;border-radius:16px;padding:18px;border:1px solid #1c1c1e;}
+  .rules-title{font-size:11px;color:#FF3B30;letter-spacing:3px;margin-bottom:14px;}
+  .rule-row{display:flex;gap:12px;padding:8px 0;border-bottom:1px solid #1c1c1e;align-items:flex-start;}
+  .rule-row:last-child{border-bottom:none;}
+  .rule-icon{font-size:15px;flex-shrink:0;margin-top:1px;}
+  .rule-text{font-size:12px;color:#8e8e93;line-height:1.6;}
+  #workout-screen{display:none;flex-direction:column;min-height:100vh;}
+  #workout-screen.active{display:flex;}
+  .wo-header{background:#1c1c1e;padding:14px 18px;display:flex;align-items:center;gap:14px;border-bottom:1px solid #2c2c2e;position:sticky;top:0;z-index:10;}
+  .back-btn{background:#2c2c2e;border:none;color:#fff;border-radius:10px;padding:8px 14px;font-size:13px;}
+  .wo-title-block{flex:1;}
+  .wo-eyebrow{font-size:10px;letter-spacing:2px;}
+  .wo-title{font-size:14px;font-weight:700;margin-top:2px;}
+  .wo-step-counter{font-size:11px;color:#8e8e93;}
+  .progress-bar-wrap{height:3px;background:#2c2c2e;}
+  .progress-bar-fill{height:100%;transition:width .4s ease;}
+  .phase-label{padding:12px 20px 0;font-size:11px;letter-spacing:3px;}
+  .set-label-text{margin-left:12px;font-size:11px;color:#8e8e93;}
+  .wo-main{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:20px 24px;}
+  .countdown-wrap{text-align:center;}
+  .countdown-eyebrow{font-size:13px;color:#FF9F0A;letter-spacing:4px;margin-bottom:16px;}
+  .countdown-ex-name{font-size:22px;font-weight:900;margin-bottom:24px;font-family:'Playfair Display',serif;}
+  .countdown-circle-wrap{position:relative;display:inline-block;margin-bottom:16px;}
+  .countdown-number{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;font-size:72px;font-weight:900;color:#FF9F0A;font-family:'Playfair Display',serif;}
+  .countdown-sub{font-size:12px;color:#8e8e93;letter-spacing:1px;}
+  @keyframes pulse{0%,100%{transform:scale(1)}50%{transform:scale(1.07)}}
+  .pulse-anim{animation:pulse 1s ease-in-out infinite;}
+  .timed-wrap{width:100%;max-width:400px;text-align:center;}
+  .ex-name{font-size:28px;font-weight:900;margin-bottom:8px;line-height:1.1;font-family:'Playfair Display',serif;}
+  .ex-note{font-size:13px;color:#8e8e93;margin-bottom:28px;line-height:1.6;}
+  .circle-timer-wrap{position:relative;display:inline-block;margin-bottom:28px;}
+  .circle-timer-inner{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;}
+  .circle-time-big{font-size:46px;font-weight:900;line-height:1;font-family:'Playfair Display',serif;}
+  .circle-time-total{font-size:11px;color:#8e8e93;margin-top:4px;}
+  .reps-wrap{width:100%;max-width:400px;text-align:center;}
+  .reps-big{font-size:88px;font-weight:900;line-height:1;font-family:'Playfair Display',serif;}
+  .reps-label{font-size:13px;color:#8e8e93;margin-top:4px;letter-spacing:2px;}
+  .rest-wrap{text-align:center;}
+  .rest-eyebrow{font-size:13px;color:#8e8e93;letter-spacing:3px;margin-bottom:20px;}
+  .rest-time-big{font-size:38px;font-weight:900;font-family:'Playfair Display',serif;}
+  .rest-note{color:#8e8e93;font-size:13px;margin-top:14px;}
+  .skip-btn{margin-top:20px;background:#2c2c2e;border:1px solid #3a3a3c;color:#8e8e93;border-radius:12px;padding:10px 24px;font-size:13px;}
+  .controls{display:flex;gap:12px;width:100%;max-width:400px;}
+  .btn-pause{flex:1;background:#2c2c2e;border:1px solid #3a3a3c;color:#fff;border-radius:14px;padding:16px;font-size:14px;font-weight:700;}
+  .btn-main{flex:2;border:none;color:#fff;border-radius:14px;padding:16px;font-size:14px;font-weight:700;letter-spacing:1px;}
+  .btn-start{width:100%;border:none;color:#fff;border-radius:16px;padding:20px;font-size:17px;font-weight:700;letter-spacing:2px;}
+  .sound-legend{padding:8px 20px;display:flex;gap:10px;justify-content:center;flex-wrap:wrap;}
+  .sound-item{font-size:10px;color:#48484a;}
+  .next-up{padding:12px 20px 32px;border-top:1px solid #1c1c1e;}
+  .next-up-label{font-size:10px;color:#636366;letter-spacing:2px;margin-bottom:6px;}
+  .next-up-name{font-size:13px;color:#8e8e93;}
+  .next-up-detail{color:#636366;}
+  #finish-screen{display:none;flex-direction:column;align-items:center;justify-content:center;min-height:100vh;padding:32px;text-align:center;}
+  #finish-screen.active{display:flex;}
+  .finish-emoji{font-size:72px;margin-bottom:16px;}
+  .finish-eyebrow{font-size:11px;color:#FF3B30;letter-spacing:4px;margin-bottom:12px;}
+  .finish-title{font-size:30px;font-weight:900;margin-bottom:8px;font-family:'Playfair Display',serif;line-height:1.2;}
+  .finish-sub{color:#8e8e93;font-size:14px;margin-bottom:40px;line-height:1.6;}
+  .btn-home{background:#FF3B30;color:#fff;border:none;border-radius:14px;padding:16px 40px;font-size:15px;font-weight:700;letter-spacing:1px;}
+</style>
+</head>
+<body>
+<div id="app">
+
+  <!-- HOME SCREEN -->
+  <div id="home-screen">
+    <div class="home-hero">
+      <div class="hero-eyebrow">Outboxer · Home Program</div>
+      <h1 class="hero-title serif">CORNER<br/><span>ZERO</span></h1>
+      <p class="hero-sub">5'11 · 74kg · Distance Fighter Build</p>
+      <div class="week-bar">
+        <span class="week-label">WEEK</span>
+        <button class="week-btn minus" onclick="changeWeek(-1)">−</button>
+        <span class="week-num" id="week-display">1</span>
+        <button class="week-btn plus" onclick="changeWeek(1)">+</button>
+        <span class="overload-badge" id="overload-badge"></span>
+      </div>
+    </div>
+    <div class="day-cards" id="day-cards"></div>
+    <div class="rules-box">
+      <div class="rules-title">OUT-BOXER RULES</div>
+      <div class="rule-row"><span class="rule-icon">🥊</span><span class="rule-text">Jab is your weapon — throw it 3–4x more than anything else</span></div>
+      <div class="rule-row"><span class="rule-icon">👟</span><span class="rule-text">Never be flat-footed. Bounce between every combo</span></div>
+      <div class="rule-row"><span class="rule-icon">📐</span><span class="rule-text">Move at angles — not straight back</span></div>
+      <div class="rule-row"><span class="rule-icon">📈</span><span class="rule-text">Week selector auto-applies progressive overload to all exercises</span></div>
+      <div class="rule-row"><span class="rule-icon">⏱</span><span class="rule-text">Sounds + timer run everything — just hit START and go</span></div>
+    </div>
+  </div>
+
+  <!-- WORKOUT SCREEN -->
+  <div id="workout-screen">
+    <div class="wo-header">
+      <button class="back-btn" onclick="goHome()">← Back</button>
+      <div class="wo-title-block">
+        <div class="wo-eyebrow" id="wo-eyebrow"></div>
+        <div class="wo-title" id="wo-title"></div>
+      </div>
+      <div class="wo-step-counter" id="wo-step-counter"></div>
+    </div>
+    <div class="progress-bar-wrap">
+      <div class="progress-bar-fill" id="progress-fill"></div>
+    </div>
+    <div class="phase-label">
+      <span id="phase-label-text"></span>
+      <span class="set-label-text" id="set-label-text"></span>
+    </div>
+    <div class="wo-main" id="wo-main"></div>
+    <div class="sound-legend" id="sound-legend" style="display:none;">
+      <span class="sound-item">🔔 5 beeps = get ready</span>
+      <span class="sound-item">🔊 2 tones = done</span>
+      <span class="sound-item">🎵 3 tones = session end</span>
+    </div>
+    <div class="next-up" id="next-up-box" style="display:none;">
+      <div class="next-up-label">NEXT UP</div>
+      <div class="next-up-name" id="next-up-name"></div>
+    </div>
+  </div>
+
+  <!-- FINISH SCREEN -->
+  <div id="finish-screen">
+    <div class="finish-emoji">🥊</div>
+    <div class="finish-eyebrow">SESSION COMPLETE</div>
+    <h2 class="finish-title serif" id="finish-title"></h2>
+    <p class="finish-sub" id="finish-sub"></p>
+    <button class="btn-home" onclick="goHome()">BACK TO HOME</button>
+  </div>
+
+</div>
+<script>
+const BASE_WORKOUTS = [
+  {
+    id:0, day:"DAY 1", label:"Core & Footwork", accent:"#FF3B30", icon:"◈",
+    warmup:[
+      {name:"Jump Rope (Shadow)",duration:180,type:"timed",note:"Stay light on toes, alternate feet"},
+      {name:"High Knees",duration:60,type:"timed",note:"Drive knees up explosively"},
+      {name:"Hip Circles",reps:"10 each side",type:"reps",note:"Loosen hips for footwork"},
+    ],
+    blocks:[
+      {name:"CORE CIRCUIT",color:"#FF3B30",exercises:[
+        {name:"Plank",sets:3,duration:45,type:"timed",note:"Squeeze glutes and core"},
+        {name:"Bicycle Crunches",sets:3,reps:20,type:"reps",note:"Slow rotation — hook power"},
+        {name:"Leg Raises",sets:3,reps:15,type:"reps",note:"Keep lower back flat"},
+        {name:"Russian Twists (Band)",sets:3,reps:20,type:"reps",note:"Figure-8 band for resistance"},
+        {name:"Hollow Body Hold",sets:3,duration:30,type:"timed",note:"Critical for punch stability"},
+      ]},
+      {name:"FOOTWORK",color:"#FF9F0A",exercises:[
+        {name:"Box Step Drill",sets:4,duration:30,type:"timed",note:"4 corners — stay on toes"},
+        {name:"Pendulum Step",sets:4,duration:60,type:"timed",note:"Pivot 45° after jab — out-boxer key"},
+        {name:"Lateral Shuffle",sets:3,reps:20,type:"reps",note:"Stay low, light on feet"},
+        {name:"Band Resistance Walk",sets:3,duration:30,type:"timed",note:"Band around ankles — hip strength"},
+      ]},
+      {name:"REFLECTION BALL",color:"#30D158",exercises:[
+        {name:"Jab-Cross on Reflex Ball",sets:3,duration:120,type:"timed",note:"Hand speed + eye tracking"},
+        {name:"Slip & Counter Drill",sets:3,duration:60,type:"timed",note:"Slip off-line, return jab"},
+      ]},
+    ],
+    cooldown:{name:"Shadow Boxing + Stretch",duration:300,note:"Light and loose"}
+  },
+  {
+    id:1, day:"DAY 2", label:"Strength & Power", accent:"#0A84FF", icon:"◉",
+    warmup:[
+      {name:"Arm Circles + Wrist Rolls",duration:60,type:"timed",note:"Protect shoulders and wrists"},
+      {name:"Jumping Jacks",reps:40,type:"reps",note:"Get blood flowing"},
+      {name:"Bodyweight Squat",reps:15,type:"reps",note:"Full depth, controlled"},
+    ],
+    blocks:[
+      {name:"UPPER BODY",color:"#0A84FF",exercises:[
+        {name:"Push-Ups",sets:4,reps:20,type:"reps",note:"Explode up, lower slow"},
+        {name:"Diamond Push-Ups",sets:3,reps:12,type:"reps",note:"Tricep dominant — straight punches"},
+        {name:"Wide Push-Ups",sets:3,reps:15,type:"reps",note:"Chest + shoulder width"},
+        {name:"Pike Push-Ups",sets:3,reps:12,type:"reps",note:"Shoulder strength for uppercuts"},
+        {name:"Band Resistance Punches",sets:3,duration:30,type:"timed",note:"Band behind back — fast turnover"},
+      ]},
+      {name:"LOWER BODY POWER",color:"#BF5AF2",exercises:[
+        {name:"Jump Squats",sets:4,reps:15,type:"reps",note:"Land soft — explosive leg drive"},
+        {name:"Bulgarian Split Squat",sets:3,reps:12,type:"reps",note:"Rear foot elevated — balance + strength"},
+        {name:"Lateral Lunges",sets:3,reps:12,type:"reps",note:"Steps off center line"},
+        {name:"Calf Raises",sets:4,reps:25,type:"reps",note:"Stay on toes — out-boxer bounce"},
+      ]},
+      {name:"CORE POWER",color:"#FF375F",exercises:[
+        {name:"V-Ups",sets:3,reps:15,type:"reps",note:"Full contraction"},
+        {name:"Side Plank",sets:3,duration:30,type:"timed",note:"Lateral core — body shot protection"},
+        {name:"Plank to Push-Up",sets:3,reps:10,type:"reps",note:"Shoulder stability"},
+      ]},
+    ],
+    cooldown:{name:"Hip Flexor + Chest Stretch",duration:300,note:"Hold each stretch 30 sec"}
+  },
+  {
+    id:2, day:"DAY 3", label:"Shadow Boxing & Conditioning", accent:"#FF9F0A", icon:"◇",
+    warmup:[
+      {name:"Shadow Boxing (Loose)",duration:180,type:"timed",note:"No power — find rhythm"},
+      {name:"Neck Rolls + Shoulder Shrugs",reps:10,type:"reps",note:"Protect neck"},
+      {name:"Leg Swings",reps:15,type:"reps",note:"Open hips for pivoting"},
+    ],
+    blocks:[
+      {name:"SHADOW BOXING ROUNDS",color:"#FF9F0A",exercises:[
+        {name:"Rd 1 — Jab & Move",sets:1,duration:180,type:"timed",note:"Stay outside, jab to range-find, pivot after every combo"},
+        {name:"Rd 2 — Band Shadow",sets:1,duration:180,type:"timed",note:"Band on wrists — full combos with resistance"},
+        {name:"Rd 3 — Reflex Ball",sets:1,duration:180,type:"timed",note:"Mix jabs, crosses, slips"},
+        {name:"Rd 4 — Defense & Counter",sets:1,duration:180,type:"timed",note:"Slip, roll, step OUT, counter jab"},
+        {name:"Rd 5 — All-Out",sets:1,duration:120,type:"timed",note:"Max speed, stay technical"},
+      ]},
+      {name:"CONDITIONING",color:"#FF3B30",exercises:[
+        {name:"Burpees",sets:4,reps:10,type:"reps",note:"Explosive"},
+        {name:"Mountain Climbers",sets:3,duration:30,type:"timed",note:"Fast feet, stable core"},
+        {name:"Jump Squats",sets:3,reps:12,type:"reps",note:"Maintain form when tired"},
+        {name:"Speed Push-Ups",sets:3,reps:15,type:"reps",note:"Fast as possible with control"},
+      ]},
+      {name:"FOOTWORK PATTERNS",color:"#30D158",exercises:[
+        {name:"Outside Angle Drill",sets:5,duration:30,type:"timed",note:"Jab → step outside left → reset"},
+        {name:"Southpaw Pivot",sets:4,reps:20,type:"reps",note:"Pivot on lead foot — change angles"},
+        {name:"Retreat & Counter",sets:4,duration:30,type:"timed",note:"Step back, slip, jab as they follow"},
+      ]},
+    ],
+    cooldown:{name:"Full Body Cooldown",duration:600,note:"5 min slow shadow + 5 min stretch"}
+  }
+];
+
+const REST_SET = 45, REST_BLOCK = 90;
+let currentWeek = parseInt(localStorage.getItem('cz_week') || '1');
+let steps = [], stepIdx = 0, started = false;
+let timerInterval = null, countdownInterval = null;
+let timerSeconds = 0, totalSeconds = 0;
+let currentDayIdx = 0;
+let audioCtx = null;
+let wakeLock = null;
+let paused = false;
+
+function overload(workouts, week) {
+  const repMult = 1 + Math.floor(week/2) * 0.1;
+  const durMult = 1 + Math.floor(week/2) * 0.05;
+  const extraSet = week >= 6 ? 1 : 0;
+  return workouts.map(w => ({
+    ...w,
+    blocks: w.blocks.map(b => ({
+      ...b,
+      exercises: b.exercises.map(e => ({
+        ...e,
+        reps: e.reps ? Math.round(e.reps * repMult) : e.reps,
+        duration: e.duration ? Math.round(e.duration * durMult) : e.duration,
+        sets: (e.sets||1) + extraSet
+      }))
+    }))
+  }));
+}
+
+function flattenSteps(workout) {
+  const s = [];
+  workout.warmup.forEach(e => s.push({...e, phase:"WARM-UP", phaseColor:"#FF9F0A", setLabel:null}));
+  workout.blocks.forEach(b => {
+    b.exercises.forEach((e, ei) => {
+      const sets = e.sets || 1;
+      for (let si = 0; si < sets; si++) {
+        s.push({...e, phase:b.name, phaseColor:b.color, setLabel: sets>1 ? `Set ${si+1}/${sets}` : null});
+        if (si < sets-1) s.push({name:"Rest",duration:REST_SET,type:"rest",phase:b.name,phaseColor:"#3a3a3c",setLabel:null,note:"Breathe — reset"});
+      }
+      if (ei < b.exercises.length-1) s.push({name:"Rest",duration:REST_BLOCK,type:"rest",phase:b.name,phaseColor:"#2c2c2e",setLabel:null,note:"Prepare for next exercise"});
+    });
+  });
+  s.push({...workout.cooldown, type:"timed", phase:"COOL-DOWN", phaseColor:"#30D158", setLabel:null});
+  return s;
+}
+
+function getCtx() {
+  if (!audioCtx) audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+  if (audioCtx.state === 'suspended') audioCtx.resume();
+  return audioCtx;
+}
+function tone(ctx, freq, t, dur, gain=0.35, type='sine') {
+  const o = ctx.createOscillator(), g = ctx.createGain();
+  o.connect(g); g.connect(ctx.destination);
+  o.type = type; o.frequency.setValueAtTime(freq, t);
+  g.gain.setValueAtTime(0, t);
+  g.gain.linearRampToValueAtTime(gain, t+0.01);
+  g.gain.linearRampToValueAtTime(0, t+dur-0.01);
+  o.start(t); o.stop(t+dur);
+}
+function playCountdown() { const ctx=getCtx(); for(let i=0;i<5;i++) tone(ctx,880,ctx.currentTime+i,0.12,0.4,'square'); }
+function playGo() { const ctx=getCtx(); tone(ctx,1320,ctx.currentTime,0.08,0.5,'square'); tone(ctx,1320,ctx.currentTime+0.1,0.08,0.5,'square'); }
+function playDone() { const ctx=getCtx(); tone(ctx,660,ctx.currentTime,0.15,0.4,'sine'); tone(ctx,880,ctx.currentTime+0.2,0.15,0.4,'sine'); }
+function playRest() { const ctx=getCtx(); tone(ctx,440,ctx.currentTime,0.3,0.2,'sine'); }
+function playFinish() { const ctx=getCtx(); tone(ctx,523,ctx.currentTime,0.25,0.45,'sine'); tone(ctx,659,ctx.currentTime+0.3,0.25,0.45,'sine'); tone(ctx,1047,ctx.currentTime+0.6,0.6,0.5,'sine'); }
+
+async function requestWakeLock() { try { wakeLock = await navigator.wakeLock.request('screen'); } catch(e) {} }
+function releaseWakeLock() { try { if(wakeLock){wakeLock.release();wakeLock=null;} } catch(e) {} }
+
+function startTimer(secs) {
+  clearTimer();
+  timerSeconds = secs; totalSeconds = secs;
+  renderTimerDisplay();
+  timerInterval = setInterval(() => {
+    timerSeconds--;
+    renderTimerDisplay();
+    if (timerSeconds <= 0) { clearTimer(); onTimerDone(); }
+  }, 1000);
+}
+function clearTimer() { if(timerInterval){clearInterval(timerInterval);timerInterval=null;} }
+function pauseTimer() { clearTimer(); }
+function resumeTimer() {
+  if (timerSeconds > 0) {
+    timerInterval = setInterval(() => {
+      timerSeconds--;
+      renderTimerDisplay();
+      if (timerSeconds<=0){clearTimer();onTimerDone();}
+    },1000);
+  }
+}
+function onTimerDone() {
+  const isLast = stepIdx === steps.length-1;
+  if (isLast) { playFinish(); setTimeout(showFinish, 1800); }
+  else { playDone(); setTimeout(advance, 400); }
+}
+
+function fmt(s) { const m=Math.floor(s/60),sec=s%60; return `${m}:${sec.toString().padStart(2,'0')}`; }
+
+function svgCircle(secs, total, color, size=180, strokeW=8) {
+  const r=(size-strokeW*2)/2, cx=size/2, cy=size/2;
+  const circ=2*Math.PI*r, pct=total>0?secs/total:0, dash=circ*pct;
+  return `<svg width="${size}" height="${size}" style="transform:rotate(-90deg)">
+    <circle cx="${cx}" cy="${cy}" r="${r}" fill="none" stroke="#1c1c1e" stroke-width="${strokeW}"/>
+    <circle cx="${cx}" cy="${cy}" r="${r}" fill="none" stroke="${color}" stroke-width="${strokeW}"
+      stroke-dasharray="${dash} ${circ}" stroke-linecap="round"
+      style="transition:stroke-dasharray 0.6s ease"/>
+  </svg>`;
+}
+
+function renderTimerDisplay() {
+  const cur = steps[stepIdx]; if (!cur) return;
+  if (cur.type==='timed') {
+    const wrap = document.getElementById('circle-timer-wrap');
+    if (wrap) { wrap.querySelector('.svg-slot').innerHTML = svgCircle(timerSeconds,totalSeconds,cur.phaseColor||'#FF3B30'); wrap.querySelector('.circle-time-big').textContent = fmt(timerSeconds); }
+  } else if (cur.type==='rest') {
+    const wrap = document.getElementById('rest-circle-wrap');
+    if (wrap) { wrap.querySelector('.svg-slot').innerHTML = svgCircle(timerSeconds,totalSeconds,'#3a3a3c',160); wrap.querySelector('.rest-time-big').textContent = fmt(timerSeconds); }
+  }
+}
+
+function startCountdown(then) {
+  let c = 5; playCountdown(); renderCountdown(c);
+  countdownInterval = setInterval(() => {
+    c--;
+    if (c <= 0) { clearInterval(countdownInterval); countdownInterval=null; playGo(); then(); }
+    else { renderCountdown(c); }
+  }, 1000);
+}
+function renderCountdown(n) {
+  const cur = steps[stepIdx];
+  document.getElementById('wo-main').innerHTML = `
+    <div class="countdown-wrap">
+      <div class="countdown-eyebrow">GET READY</div>
+      <div class="countdown-ex-name serif">${cur.name}</div>
+      <div class="countdown-circle-wrap pulse-anim">
+        <svg width="160" height="160" style="transform:rotate(-90deg)">
+          <circle cx="80" cy="80" r="72" fill="none" stroke="#FF9F0A" stroke-width="6"/>
+        </svg>
+        <div class="countdown-number">${n}</div>
+      </div>
+      <div class="countdown-sub">${cur.type==='timed'?fmt(cur.duration)+' · ':''}"${cur.note}"</div>
+    </div>`;
+}
+  function renderStep() {
+  const cur = steps[stepIdx];
+  const isLast = stepIdx === steps.length-1;
+  const total = steps.length;
+  document.getElementById('wo-step-counter').textContent = `${stepIdx+1}/${total}`;
+  document.getElementById('progress-fill').style.width = `${(stepIdx/total)*100}%`;
+  document.getElementById('phase-label-text').textContent = cur.phase;
+  document.getElementById('phase-label-text').style.color = cur.phaseColor;
+  document.getElementById('set-label-text').textContent = cur.setLabel || '';
+  const main = document.getElementById('wo-main');
+  const accent = BASE_WORKOUTS[currentDayIdx].accent;
+  const nub = document.getElementById('next-up-box');
+  if (stepIdx < total-1) {
+    const nx = steps[stepIdx+1];
+    nub.style.display='block';
+    document.getElementById('next-up-name').innerHTML = `${nx.name}${nx.reps?`<span class="next-up-detail"> · ${nx.reps} reps</span>`:''}${nx.duration?`<span class="next-up-detail"> · ${fmt(nx.duration)}</span>`:''}`;
+  } else { nub.style.display='none'; }
+
+  if (!started) {
+    main.innerHTML = `
+      <div class="timed-wrap">
+        <div class="ex-name serif">${cur.name}</div>
+        <p class="ex-note">${cur.note}</p>
+        ${cur.type==='timed'?`<div style="font-size:28px;color:${accent};font-family:'Playfair Display',serif;font-weight:900;margin-bottom:28px;">${fmt(cur.duration)}</div>`:''}
+        ${cur.type==='reps'?`<div class="reps-big" style="color:${accent};margin-bottom:28px;">${cur.reps}</div><div class="reps-label">REPS</div>`:''}
+        <button class="btn-start" style="background:${accent};" onclick="handleStart()">START WORKOUT</button>
+      </div>`; return;
+  }
+  if (cur.type==='rest') {
+    main.innerHTML = `
+      <div class="rest-wrap">
+        <div class="rest-eyebrow">REST</div>
+        <div id="rest-circle-wrap" style="position:relative;display:inline-block;margin-bottom:0;">
+          <div class="svg-slot">${svgCircle(timerSeconds,totalSeconds,'#3a3a3c',160)}</div>
+          <div style="position:absolute;inset:0;display:flex;align-items:center;justify-content:center;">
+            <span class="rest-time-big">${fmt(timerSeconds)}</span>
+          </div>
+        </div>
+        <p class="rest-note">${cur.note}</p>
+        <button class="skip-btn" onclick="skipRest()">Skip Rest</button>
+      </div>`;
+  } else if (cur.type==='timed') {
+    main.innerHTML = `
+      <div class="timed-wrap">
+        <div class="ex-name serif">${cur.name}</div>
+        <p class="ex-note">${cur.note}</p>
+        <div id="circle-timer-wrap" class="circle-timer-wrap">
+          <div class="svg-slot">${svgCircle(timerSeconds,totalSeconds,cur.phaseColor||accent)}</div>
+          <div class="circle-timer-inner">
+            <span class="circle-time-big">${fmt(timerSeconds)}</span>
+            <span class="circle-time-total">${fmt(cur.duration)}</span>
+          </div>
+        </div>
+        <div class="controls">
+          <button class="btn-pause" id="pause-btn" onclick="togglePause()">⏸ Pause</button>
+          <button class="btn-main" style="background:${accent};" onclick="handleNext()">${isLast?'FINISH 🥊':'SKIP →'}</button>
+        </div>
+      </div>`;
+  } else {
+    main.innerHTML = `
+      <div class="reps-wrap">
+        <div class="ex-name serif">${cur.name}</div>
+        <p class="ex-note">${cur.note}</p>
+        <div class="reps-big" style="color:${cur.phaseColor||accent};margin:28px 0 8px;">${cur.reps}</div>
+        <div class="reps-label">REPS</div>
+        <div style="margin-top:32px;">
+          <button class="btn-main" style="background:${accent};width:100%;" onclick="handleNext()">${isLast?'FINISH 🥊':'DONE →'}</button>
+        </div>
+      </div>`;
+  }
+}
+
+function togglePause() {
+  paused = !paused;
+  const btn = document.getElementById('pause-btn');
+  if (paused) { pauseTimer(); if(btn) btn.textContent='▶ Resume'; }
+  else { resumeTimer(); if(btn) btn.textContent='⏸ Pause'; }
+}
+function handleStart() {
+  getCtx(); started = true; requestWakeLock();
+  document.getElementById('sound-legend').style.display='flex';
+  const cur = steps[stepIdx];
+  if (cur.type==='timed') { renderStep(); startCountdown(() => { startTimer(cur.duration); renderStep(); }); }
+  else if (cur.type==='rest') { playRest(); startTimer(cur.duration); renderStep(); }
+  else { renderStep(); }
+}
+function handleNext() {
+  clearTimer();
+  if(countdownInterval){clearInterval(countdownInterval);countdownInterval=null;}
+  advance();
+}
+function skipRest() { clearTimer(); advance(); }
+function advance() {
+  if (stepIdx >= steps.length-1) { showFinish(); return; }
+  stepIdx++; paused = false;
+  const cur = steps[stepIdx];
+  if (cur.type==='timed') { renderStep(); startCountdown(() => { startTimer(cur.duration); renderStep(); }); }
+  else if (cur.type==='rest') { playRest(); startTimer(cur.duration); renderStep(); }
+  else { renderStep(); }
+}
+function showFinish() {
+  clearTimer(); releaseWakeLock();
+  const w = BASE_WORKOUTS[currentDayIdx];
+  document.getElementById('finish-title').innerHTML = `${w.day}<br/>${w.label}`;
+  document.getElementById('finish-sub').textContent = `Week ${currentWeek} done. Rest well — you earned it.`;
+  document.getElementById('workout-screen').classList.remove('active');
+  document.getElementById('finish-screen').classList.add('active');
+}
+function goHome() {
+  clearTimer();
+  if(countdownInterval){clearInterval(countdownInterval);countdownInterval=null;}
+  releaseWakeLock(); started=false; paused=false; stepIdx=0;
+  document.getElementById('workout-screen').classList.remove('active');
+  document.getElementById('finish-screen').classList.remove('active');
+  document.getElementById('home-screen').style.display='';
+  document.getElementById('sound-legend').style.display='none';
+}
+function startWorkout(dayIdx) {
+  currentDayIdx = dayIdx;
+  const w = overload(BASE_WORKOUTS, currentWeek)[dayIdx];
+  steps = flattenSteps(w); stepIdx = 0; started = false; paused = false;
+  timerSeconds = 0; totalSeconds = 0;
+  document.getElementById('wo-eyebrow').textContent = `${w.day} · WK ${currentWeek}`;
+  document.getElementById('wo-eyebrow').style.color = w.accent;
+  document.getElementById('wo-title').textContent = w.label;
+  document.getElementById('progress-fill').style.background = w.accent;
+  document.getElementById('home-screen').style.display='none';
+  document.getElementById('finish-screen').classList.remove('active');
+  document.getElementById('workout-screen').classList.add('active');
+  renderStep();
+}
+function renderHome() {
+  document.getElementById('week-display').textContent = currentWeek;
+  const pct = Math.floor((currentWeek-1)/2)*10;
+  document.getElementById('overload-badge').textContent = currentWeek >= 3 ? `+${pct}% LOAD` : '';
+  document.getElementById('day-cards').innerHTML = BASE_WORKOUTS.map((w,i) => `
+    <div class="day-card" onclick="startWorkout(${i})">
+      <div class="day-card-bar" style="background:${w.accent};"></div>
+      <div class="day-card-inner">
+        <div style="display:flex;justify-content:space-between;align-items:flex-start;">
+          <div>
+            <div class="day-eyebrow" style="color:${w.accent};">${w.day}</div>
+            <div class="day-title">${w.label}</div>
+          </div>
+          <div class="day-icon" style="color:${w.accent};">${w.icon}</div>
+        </div>
+        <div class="day-tags">${w.blocks.map(b=>`<span class="day-tag">${b.name}</span>`).join('')}</div>
+        <div class="day-arrow"><div class="day-arrow-line"></div><span class="day-arrow-text" style="color:${w.accent};">START →</span></div>
+      </div>
+    </div>`).join('');
+}
+function changeWeek(delta) {
+  currentWeek = Math.max(1, currentWeek + delta);
+  localStorage.setItem('cz_week', currentWeek);
+  renderHome();
+}
+
+renderHome();
+
+if ('serviceWorker' in navigator) {
+  const swCode = `const CACHE='cz-v1';self.addEventListener('install',e=>e.waitUntil(caches.open(CACHE).then(c=>c.add('/'))));self.addEventListener('fetch',e=>e.respondWith(caches.match(e.request).then(r=>r||fetch(e.request))));`;
+  const blob = new Blob([swCode],{type:'application/javascript'});
+  navigator.serviceWorker.register(URL.createObjectURL(blob)).catch(()=>{});
+}
+
+const manifest = {name:"CORNER ZERO",short_name:"C0",start_url:".",display:"standalone",background_color:"#000000",theme_color:"#000000",orientation:"portrait",icons:[{src:"data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><rect width='100' height='100' fill='%23000'/><text y='.9em' font-size='80'>🥊</text></svg>",sizes:"any",type:"image/svg+xml"}]};
+const mblob = new Blob([JSON.stringify(manifest)],{type:'application/manifest+json'});
+document.querySelector('link[rel="manifest"]').href = URL.createObjectURL(mblob);
+</script>
+</body>
+</html>
